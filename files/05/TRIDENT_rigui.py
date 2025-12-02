@@ -2,7 +2,7 @@ import bpy
 
 from mathutils import Euler, Matrix, Vector, Quaternion
 
-blm_rig_id = "P2D-TRIDENT-RIG-ALIVE"
+rig_id = "P2D-TRIDENT-RIG-ALIVE"
 
 
 class TRIDENT_PT_rigui(bpy.types.Panel):
@@ -15,7 +15,7 @@ class TRIDENT_PT_rigui(bpy.types.Panel):
     @classmethod
     def poll(self, context):
         try:
-            return (context.active_object.data.get("blm_rig_id") == blm_rig_id)
+            return (context.active_object.data.get("rig_id") == rig_id)
         except (AttributeError, KeyError, TypeError):
             return False
 
@@ -29,61 +29,104 @@ class TRIDENT_PT_rigui(bpy.types.Panel):
         # this is the property we are storing the on off state in
         tweak_mode = trident_props.show_tweaks
         tweak_icon = 'HIDE_ON' if not tweak_mode else 'HIDE_OFF'
+        collection = context.active_object.data.collections_all
 
 
         row = col.row(align=True)
-        row.prop(context.active_object.data,'layers', index=8, toggle=True, text='ROOT')
+        row.prop(collection["Layer 9 - ROOT"],'is_visible',toggle=True, text='ROOT')
         row.operator("trident.tweaktoggle", emboss=True, text="", icon=tweak_icon)
 
         row = col.row(align=True)
-        row.prop(context.active_object.data,'layers', index=10, toggle=True, text='TORSO')        
+        row.prop(collection["Layer 11 - TORSO"],'is_visible', toggle=True, text='TORSO')
+        row.prop(collection["Layer 11 - TORSO"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)        
         if tweak_mode:
-            row.prop(context.active_object.data,'layers', index=11, toggle=True, text='TORSO-TWEAK')
+            row = col.row(align=True)
+            row.prop(collection["Layer 12 - TORSO-TWEAK"],'is_visible', toggle=True, text='TORSO-TWEAK')
+            row.prop(collection["Layer 12 - TORSO-TWEAK"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True) 
 
         row = col.row(align=True)
-        row.prop(context.active_object.data,'layers', index=6, toggle=True, text='FACE')        
+        row.prop(collection["Layer 7 - FACE"],'is_visible', toggle=True, text='FACE')
+        row.prop(collection["Layer 7 - FACE"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+                
         if tweak_mode:
-            row.prop(context.active_object.data,'layers', index=7, toggle=True, text='FACE-SECONDARY')
+            row.prop(collection["Layer 8 - FACE-SECONDARY"],'is_visible', toggle=True, text='FACE-SECONDARY')
+            row.prop(collection["Layer 8 - FACE-SECONDARY"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+        
+        row = col.row(align=True)
+        row = col.row(align=True)
+        row = col.row(align=True)
+        row = col.row(align=True)
+        row.prop(collection["Layer 17 - LEG-FK.L"],'is_visible', toggle=True, text='LEG-FK.L')
+        row.prop(collection["Layer 17 - LEG-FK.L"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+        row.prop(collection["Layer 20 - LEG-FK.R"],'is_visible', toggle=True, text='LEG-FK.R')
+        row.prop(collection["Layer 20 - LEG-FK.R"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+
 
         row = col.row(align=True)
-        row.prop(context.active_object.data,'layers', index=16, toggle=True, text='LEG-FK.L')
-        row.prop(context.active_object.data,'layers', index=17, toggle=True, text='LEG-IK.L')
+        row.prop(collection["Layer 18 - LEG-IK.L"],'is_visible', toggle=True, text='LEG-IK.L')
+        row.prop(collection["Layer 18 - LEG-IK.L"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+        row.prop(collection["Layer 21 - LEG-IK.R"],'is_visible', toggle=True, text='LEG-IK.R')
+        row.prop(collection["Layer 21 - LEG-IK.R"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+        
+        
         if tweak_mode:
-            row.prop(context.active_object.data,'layers', index=18, toggle=True, text='LEG-TWEAK.L')
+            row = col.row(align=True)
+            row.prop(collection["Layer 19 - LEG-TWEAK.L"],'is_visible', toggle=True, text='LEG-TWEAK.L')
+            row.prop(collection["Layer 19 - LEG-TWEAK.L"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+            row.prop(collection["Layer 22 - LEG-TWEAK.R"],'is_visible', toggle=True, text='LEG-TWEAK.R')
+            row.prop(collection["Layer 22 - LEG-TWEAK.R"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+
 
         row = col.row(align=True)
-        row.prop(context.active_object.data,'layers', index=19, toggle=True, text='LEG-FK.R')
-        row.prop(context.active_object.data,'layers', index=20, toggle=True, text='LEG-IK.R')
+        row.prop(collection["Layer 23 - ARM-FK.L"],'is_visible', toggle=True, text='ARM-FK.L')
+        row.prop(collection["Layer 23 - ARM-FK.L"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+        row.prop(collection["Layer 26 - ARM-FK.R"],'is_visible', toggle=True, text='ARM-FK.R')
+        row.prop(collection["Layer 26 - ARM-FK.R"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+        
+        row = col.row(align=True)
+
+        row.prop(collection["Layer 24 - ARM-IK.L"],'is_visible', toggle=True, text='ARM-IK.L')
+        row.prop(collection["Layer 24 - ARM-IK.L"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+        row.prop(collection["Layer 27 - ARM-IK.R"],'is_visible', toggle=True, text='ARM-IK.R')
+        row.prop(collection["Layer 27 - ARM-IK.R"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+        
         if tweak_mode:
-            row.prop(context.active_object.data,'layers', index=21, toggle=True, text='LEG-TWEAK.R')
+            row = col.row(align=True)
+            row.prop(collection["Layer 25 - ARM-TWEAK.L"],'is_visible', toggle=True, text='ARM-TWEAK.L')
+            row.prop(collection["Layer 25 - ARM-TWEAK.L"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+            row.prop(collection["Layer 28 - ARM-TWEAK.R"],'is_visible', toggle=True, text='ARM-TWEAK.R')
+            row.prop(collection["Layer 28 - ARM-TWEAK.R"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
 
         row = col.row(align=True)
-        row.prop(context.active_object.data,'layers', index=22, toggle=True, text='ARM-FK.L')
-        row.prop(context.active_object.data,'layers', index=23, toggle=True, text='ARM-IK.L')
-        if tweak_mode:
-            row.prop(context.active_object.data,'layers', index=24, toggle=True, text='ARM-TWEAK.L')
-
         row = col.row(align=True)
-        row.prop(context.active_object.data,'layers', index=25, toggle=True, text='ARM-FK.R')
-        row.prop(context.active_object.data,'layers', index=26, toggle=True, text='ARM-IK.R')
-        if tweak_mode:
-            row.prop(context.active_object.data,'layers', index=27, toggle=True, text='ARM-TWEAK.R')
-
         row = col.row(align=True)
-        row.prop(context.active_object.data,'layers', index=28, toggle=True, text='HAND.L')
+        row.prop(collection["Layer 29 - HAND.L"],'is_visible', toggle=True, text='HAND.L')
+        row.prop(collection["Layer 29 - HAND.L"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+        row.prop(collection["Layer 30 - HAND.R"],'is_visible', toggle=True, text='HAND.R')
+        row.prop(collection["Layer 30 - HAND.R"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+        
         if tweak_mode:
-            row.prop(context.active_object.data,'layers', index=30, toggle=True, text='HAND-TWEAK.L')
+            row = col.row(align=True)
+            row.prop(collection["Layer 31 - HAND-TWEAK.L"],'is_visible', toggle=True, text='HAND-TWEAK.L')
+            row.prop(collection["Layer 31 - HAND-TWEAK.L"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+            row.prop(collection["Layer 32 - HAND-TWEAK.R"],'is_visible', toggle=True, text='HAND-TWEAK.R')
+            row.prop(collection["Layer 32 - HAND-TWEAK.R"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
 
+        
         row = col.row(align=True)
-        row.prop(context.active_object.data,'layers', index=29, toggle=True, text='HAND.R')
-        if tweak_mode:
-            row.prop(context.active_object.data,'layers', index=31, toggle=True, text='HAND-TWEAK.R')
-
         row = col.row(align=True)
-        row.prop(context.active_object.data,'layers', index=12, toggle=True, text='LONG SWORD')
-        row.prop(context.active_object.data,'layers', index=13, toggle=True, text='SPEAR')
-        row.prop(context.active_object.data,'layers', index=14, toggle=True, text='SWORD.L')
-        row.prop(context.active_object.data,'layers', index=15, toggle=True, text='SWORD.R')
+        row = col.row(align=True)
+        row = col.row(align=True)
+        row.prop(collection["Layer 13 - LONG SWORD"],'is_visible', toggle=True, text='LONG SWORD')
+        row.prop(collection["Layer 13 - LONG SWORD"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+        row.prop(collection["Layer 14 - SPEAR"],'is_visible', toggle=True, text='SPEAR')
+        row.prop(collection["Layer 14 - SPEAR"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+        
+        row = col.row(align=True)
+        row.prop(collection["Layer 15 - SWORD.L"],'is_visible', toggle=True, text='SWORD.L')
+        row.prop(collection["Layer 15 - SWORD.L"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
+        row.prop(collection["Layer 16 - SWORD.R"],'is_visible', toggle=True, text='SWORD.R')
+        row.prop(collection["Layer 16 - SWORD.R"],'is_solo', text="", toggle=True, icon='SOLO_OFF', invert_checkbox=False, emboss=True)
 
 
 # THIS IS ONLY THE PARENT PANEL FOR ALL THE SUB PANELS
@@ -98,7 +141,7 @@ class TRIDENT_PT_customprops(bpy.types.Panel):
     @classmethod
     def poll(self, context):
         try:
-            return (context.active_object.data.get("blm_rig_id") == blm_rig_id)
+            return (context.active_object.data.get("rig_id") == rig_id)
         except (AttributeError, KeyError, TypeError):
             return False
         
@@ -415,7 +458,7 @@ class TRIDENT_OT_tweak_mode(bpy.types.Operator):
     @classmethod
     def poll(self, context):
         try:
-            return (context.active_object.data.get("blm_rig_id") == blm_rig_id)
+            return (context.active_object.data.get("rig_id") == rig_id)
         except (AttributeError, KeyError, TypeError):
             return False
     
@@ -427,12 +470,11 @@ class TRIDENT_OT_tweak_mode(bpy.types.Operator):
         tweak_mode = trident_props.show_tweaks
         
         arm = context.active_object
-        
-        tweak_groups = ['TWEAK' , 'WEAPONS-TWEAK']
+        tweak_groups = ['09 - Theme Color Set']
                     
         for pbone in arm.pose.bones:
             #if it has a bone group 'name' and the name is in the list
-            if hasattr( pbone.bone_group, "name") and pbone.bone_group.name in tweak_groups:
+            if hasattr( pbone.color.palette, "name") and pbone.color.palette.name in tweak_groups:
                 if tweak_mode == True:
                     pbone.bone.hide = True        
                 else:
@@ -506,7 +548,7 @@ class TRIDENT_OT_ik_fk_arm(bpy.types.Operator):
     @classmethod
     def poll(self, context):
         try:
-            return (context.active_object.data.get("blm_rig_id") == blm_rig_id)
+            return (context.active_object.data.get("rig_id") == rig_id)
         except (AttributeError, KeyError, TypeError):
             return False
     
@@ -566,7 +608,7 @@ class TRIDENT_OT_fk_ik_arm(bpy.types.Operator):
     @classmethod
     def poll(self, context):
         try:
-            return (context.active_object.data.get("blm_rig_id") == blm_rig_id)
+            return (context.active_object.data.get("rig_id") == rig_id)
         except (AttributeError, KeyError, TypeError):
             return False
     
@@ -628,7 +670,7 @@ class TRIDENT_OT_ik_fk_leg(bpy.types.Operator):
     @classmethod
     def poll(self, context):
         try:
-            return (context.active_object.data.get("blm_rig_id") == blm_rig_id)
+            return (context.active_object.data.get("rig_id") == rig_id)
         except (AttributeError, KeyError, TypeError):
             return False
     
@@ -689,7 +731,7 @@ class TRIDENT_OT_fk_ik_leg(bpy.types.Operator):
     @classmethod
     def poll(self, context):
         try:
-            return (context.active_object.data.get("blm_rig_id") == blm_rig_id)
+            return (context.active_object.data.get("rig_id") == rig_id)
         except (AttributeError, KeyError, TypeError):
             return False
     
@@ -754,7 +796,7 @@ class TRIDENT_PT_snap_panel(bpy.types.Panel):
     @classmethod
     def poll(self, context):
         try:
-            return (context.active_object.data.get("blm_rig_id") == blm_rig_id)
+            return (context.active_object.data.get("rig_id") == rig_id)
         except (AttributeError, KeyError, TypeError):
             return False
         
